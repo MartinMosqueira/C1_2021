@@ -17,7 +17,9 @@ sock.connect(serverAddress)
 
 while True:
     message = input('##: ')
+    #Send data to the server.
     sock.sendall(bytes(message,encoding='utf8'))
+    #Receive data the server.
     data = sock.recv(1024)
     print(data.decode('utf-8'))
 
