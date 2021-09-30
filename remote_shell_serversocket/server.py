@@ -38,7 +38,6 @@ class ForkingTCPServer(socketserver.ForkingMixIn,socketserver.TCPServer,):
 if __name__ == "__main__":
     import threading
     import signal
-    import multiprocessing
 
     HOST=argumento.host
     PORT=argumento.port
@@ -46,30 +45,19 @@ if __name__ == "__main__":
 
     if argumento.multiclient == 't':
         server = ThreadedTCPServer(dataServer, MyTCPHandler)
-        
-        with server:
-            server_thread = threading.Thread(target=server.serve_forever)
-            server_thread.daemon = True
-            server_thread.start()
-
-            print("Server loop running in thread:", server_thread.name)
-
-            try:
-                signal.pause()
-            except:
-                server.shutdown()
-
     elif argumento.multiclient == "p":
         server = ForkingTCPServer(dataServer, MyTCPHandler)
+        
+    with server:
+        #serve_forever: listen to multiple connections
+        server_thread = threading.Thread(target=server.serve_forever)
+        #separate the main thread from thread that serves 
+        server_thread.daemon = True
+        server_thread.start()
 
-        with server:
-            server_fork = multiprocessing.Process(target=server.serve_forever)
-            server_fork.daemon = True
-            server_fork.start()
+        print("Server loop running:", server_thread.name)
 
-            print("Server loop running in fork:", server_fork.name)
-
-            try:
-                signal.pause()
-            except:
-                server.shutdown()
+        try:
+            signal.pause()
+        except:
+            server.shutdown()
