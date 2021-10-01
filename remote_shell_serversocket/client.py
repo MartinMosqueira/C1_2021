@@ -1,5 +1,6 @@
 import argparse
 import socket
+import pickle
 
 analizador = argparse.ArgumentParser()
 analizador.add_argument("-w", "--host", help="Host", type=str)
@@ -15,10 +16,13 @@ serverAddress=((HOST,PORT))
 sock.connect(serverAddress)
 
 while True:
-    message = input('message: ')
-    sock.sendall(bytes(message,encoding='utf-8'))
+    message = input('user@:~$: ')
+    pickleMessage = pickle.dumps(message)
+    #Send data to the server.
+    sock.sendall(pickleMessage)
     data = sock.recv(1024)
-    print('recived: '+data.decode('utf-8'))
+    pickleReceive=pickle.loads(data)
+    print(pickleReceive)
 
     if message == 'exit':
         break

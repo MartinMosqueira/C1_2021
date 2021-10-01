@@ -4,6 +4,8 @@
 
 import socketserver
 import argparse
+import subprocess
+import pickle
 
 analizador = argparse.ArgumentParser()
 analizador.add_argument("-w", "--host", help="Host", type=str)
@@ -22,8 +24,22 @@ class MyTCPHandler(socketserver.BaseRequestHandler):
                     print('no data client')
                     break
 
-                print('received: ',data.decode('utf-8'))
-                self.request.sendall(data)
+                print('received: ',data)
+                pickleDeserialize=pickle.loads(data)
+                data=pickleDeserialize.split()
+                command=subprocess.run(data, capture_output=True,shell=True)
+
+                if command.returncode == 0:
+                    print('sending data back to the client')
+                    stdout=str(command.stdout,'utf-8')
+                    pickleMessage=pickle.dumps(stdout)
+                    #Send data to the client.
+                    self.request.sendall(pickleMessage)
+                else:
+                    stderr=str(command.stderr,'utf-8')
+                    pickleMessage=pickle.dumps(stderr)
+                    #Send data to the client.
+                    self.request.sendall(pickleMessage)
         
         finally:
         # Clean up the connection
@@ -49,13 +65,14 @@ if __name__ == "__main__":
         server = ForkingTCPServer(dataServer, MyTCPHandler)
         
     with server:
+        ip, port = server.server_address
         #serve_forever: listen to multiple connections
         server_thread = threading.Thread(target=server.serve_forever)
         #separate the main thread from thread that serves 
         server_thread.daemon = True
         server_thread.start()
 
-        print("Server loop running:", server_thread.name)
+        print("Server loop running:",ip,port)
 
         try:
             signal.pause()
