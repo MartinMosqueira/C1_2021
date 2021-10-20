@@ -17,11 +17,11 @@ sock.connect(serverAddress)
 
 while True:
     message = input('##: ')
+    if message == 'exit':
+        break
     sock.sendall(bytes(message,encoding='utf8'))
     data = sock.recv(1024)
     print(data.decode('utf-8'))
 
-    if message == 'exit':
-        break
 print('closing socket')
 sock.close()
