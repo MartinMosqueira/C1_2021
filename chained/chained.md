@@ -1,0 +1,11 @@
+En el ejemplo nos encontramos con 4 funciones asincronas:
+
+-funcion asincrona "primera": va a tomar un parametro entero que va a ser un numero entero asignado como un identificador para la funcion. La funcion se va a encargar de ejecutar un tiempo aleatorio en un rango de entre 0-10 segundos, pero en una espera asincrona, va a retornar un mensaje con su identificador al finalizar su ejecucion.
+
+-funcion asincrona "segunda": va tomar dos parametros, los dos parametros van a ser los identificadores de la funcion primera asincrona. Tambien va a esperar un tiempo aleatorio entre 0-10 segundos en espera asincrona, en este caso va a retornar tambien un mensaje, pero simulando una relacion entre identificadores de ambas funciones.
+
+-funcion asincrona"chain": va a tomar como parametro un numero entro identificador; que se va a usar para el parametro de las funcions asincronas antes mensionadas. Esta funcion se va a encargar de agregar las funciones asincronas o corrutinas a un loop de eventos, donde se van a encontrar en espera de ejecucion cuando sean llamadas. Además de eso va a controlar cuanto se demora su ejecucion desde que son llamadas hasta que finaliza su ejecucion. Retornara un mensaje simulando el encadenamiento de ambas corrutinas y su duracion. En esta caso se habla de encadenamiento ya que la corrutina "segunda" va a estar en una espera asincronica a que la corrutina "primera" retorne su mensaje.
+
+-funcion asincrona principal "main": esta funcion se va a encargar de agrupar la ejecucion en un loop de eventos, de tantas corrutinas "chain" como lo indique el for, que va a estar determinado por el argumento variable *args que se le pase a la funcion main. Se van a ejecutar asincronicamente en tanto encuentren una operacion E/S en alguna de las corrutinas pasando a la siguiente, de este modo hasta finalizar la ejecucion de todas las corrutinas en el loop.
+
+ejecucion: en la ejecucion se va a controlar el tiempo que tarde tambien en finalizar, por defecto se va a tomar una lista de 3 nuemeros como argumento para la funcion asincronica "main",  pero se puede pasar los nuemeros que elijamos para pasar como identificador a la funcion "chain" y cantidades para pasar al loop de eventos de la corrutina principal "main".
